@@ -1,108 +1,95 @@
-import * as React from "react"
-import { Router, Link, RouteComponentProps } from "@reach/router"
-import axios from "axios";
-
-let Home: React.FC<RouteComponentProps> = () => (
-  <div>
-  </div>
-)
-
-interface Todos {
-  userId: number
-  id: number
-  title: string
-  completed: true
-}
+import * as React from "react";
+import { concat } from "ramda";
+import { Router, RouteComponentProps } from "@reach/router";
+import TodoSingle from "./TodoSingle";
+import TodosList, { Todo } from "./TodosList";
+import { getAllTodos, putTodo, postTodo } from "../../api/todos";
+import NewTodo from "./NewTodo";
+import { ITodoForm } from "./TodoForm";
 
 interface TodosState {
-  todos: Todos[]
+  todos: Todo[];
 }
 
-interface TodoSingleProps {
-  todoId: string
-  todos: Todos[]
-}
+export default class TodoApp extends React.Component<
+  RouteComponentProps,
+  TodosState
+> {
+  state: TodosState = {
+    todos: [],
+  };
 
-interface TodosSingleState {
-  todo?: Todos
-}
-
-class Todos extends React.Component<RouteComponentProps<TodosState>>{
-  render() {
-    return (
-      <div>
-        {this.props.todos && this.props.todos.map((todo) => (
-          <div key={todo.id}>
-            <Link to={todo.id.toString()}>
-              <h3>{todo.title}</h3>
-            </Link>
-          </div>
-        ))}
-      </div>
-    )
-  }
-}
-
-class TodoSingle extends React.Component<RouteComponentProps<TodoSingleProps>, TodosSingleState>{
-  state: TodosSingleState = {
+  constructor(props: RouteComponentProps) {
+    super(props);
+    this.fetchTodoList = this.fetchTodoList.bind(this);
+    this.onSubmitTodoForm = this.onSubmitTodoForm.bind(this);
+    this.onSubmitNewForm = this.onSubmitNewForm.bind(this);
   }
 
   componentDidMount() {
-    const { todos, todoId } = this.props
-    if (todos && todoId) {
-      const todo = todos.find(({ id }) => id === parseInt(todoId, 10))
-      todo && this.setState({ todo })
+    this.fetchTodoList();
+  }
+
+  fetchTodoList() {
+    getAllTodos().then(todos => {
+      this.setState({ todos });
+    });
+  }
+
+  onSubmitTodoForm({ id, completed, title, userId }: ITodoForm) {
+    if (id !== undefined) {
+      return putTodo({
+        id,
+        completed,
+        title,
+        userId,
+      }).then(todo => {
+        const patchedTodoList = this.state.todos.map(oldTodos => {
+          if (oldTodos.id === todo.id) {
+            return todo;
+          } else {
+            return oldTodos;
+          }
+        });
+        this.setState({
+          todos: patchedTodoList,
+        });
+        return todo;
+      });
+    } else {
+      return postTodo({
+        title,
+        userId,
+        completed,
+      }).then(todo => {
+        this.setState({ todos: concat([todo], this.state.todos) });
+        return todo;
+      });
     }
   }
 
-  render() {
-    const {todo} = this.state
-    return (
-      <React.Fragment>
-        {todo && <div>
-          <h1>{todo.title}</h1>
-          <h1>{todo.completed? "Completed": "NotCompleted"}</h1>
-        </div>}
-      </React.Fragment>
-    )
-  }
-}
-
-
-class TodosRoot extends React.Component<RouteComponentProps, TodosState> {
-  state: TodosState = {
-    todos: []
-  }
-
-  componentDidMount() {
-    axios.get('https://jsonplaceholder.typicode.com/todos').then(({ data }) => {
-      this.setState({
-        todos: data
-      })
-    })
+  onSubmitNewForm(todo: ITodoForm) {
+    return this.onSubmitTodoForm(todo).then(todo => {
+      if (this.props.navigate) {
+        this.props.navigate("/todos");
+      }
+      return todo;
+    });
   }
 
   render() {
     return (
       <div>
         <Router>
-          <TodoSingle path=":todoId" todos={this.state.todos} />
-          <Todos path="/" todos={this.state.todos} />
+          <TodoSingle
+            path=":todoId"
+            todos={this.state.todos}
+            onEdit={this.onSubmitTodoForm}
+          />
+          <NewTodo path="/new" onSubmit={this.onSubmitNewForm} />
+          <TodosList path="/" todos={this.state.todos} />
         </Router>
       </div>
-    )
+    );
   }
 }
-
-class ToDos extends React.Component {
-  render() {
-    return (
-      <Router>
-        <Home path="/" />
-        <TodosRoot path="todos/*" />
-      </Router>
-    )
-  }
-}
-
-export default ToDos;
