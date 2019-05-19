@@ -1,8 +1,12 @@
 import * as React from "react";
-import { Link, RouteComponentProps } from "@reach/router";
+import { Link, RouteComponentProps, NavigateFn } from "@reach/router";
 import { Table, Button, Input } from "reactstrap";
 
 import { useTranslation } from "react-i18next";
+import i18next from "i18next";
+
+type onDeleteFN = (todo: Todo) => void;
+type onCheckedFN = (todo: Todo) => Promise<Todo | undefined>;
 
 export interface Todo {
   userId: number;
@@ -11,17 +15,29 @@ export interface Todo {
   completed: boolean;
 }
 
-export interface TodosProps {
-  todos: Todo[];
+interface ITodoListLine {
+  todo: Todo;
+  onDelete: onDeleteFN;
+  onChecked: onCheckedFN;
 }
 
-const TodoListLine: React.FC<{ todo: Todo }> = ({ todo }) => {
+const TodoListLine: React.FC<ITodoListLine> = ({
+  todo,
+  onDelete,
+  onChecked,
+}) => {
   const { t } = useTranslation();
   return (
     <tr>
       <td>{todo.id}</td>
       <td>
-        <Input type="checkbox" defaultChecked={todo.completed} />
+        <Input
+          type="checkbox"
+          defaultChecked={todo.completed}
+          onChange={event => {
+            onChecked({ ...todo, completed: event.target.checked });
+          }}
+        />
       </td>
       <td>
         <Link to={todo.id.toString()}>{todo.title}</Link>
@@ -31,7 +47,7 @@ const TodoListLine: React.FC<{ todo: Todo }> = ({ todo }) => {
           className="floating-right"
           size="sm"
           color="danger"
-          onClick={() => console.log("delete", todo.id)}
+          onClick={() => onDelete(todo)}
         >
           {t("delete")}
         </Button>
@@ -40,33 +56,66 @@ const TodoListLine: React.FC<{ todo: Todo }> = ({ todo }) => {
   );
 };
 
-const TodoList: React.FC<RouteComponentProps<TodosProps>> = ({
+interface TableHead {
+  navigate: NavigateFn;
+  t: i18next.TFunction;
+}
+
+const TableHead: React.FC<TableHead> = ({ t, navigate }) => (
+  <thead>
+    <tr>
+      <th colSpan={3}>{t("new_todo")}</th>
+      <th>
+        <Button
+          color="primary"
+          size="sm"
+          className="floating-right"
+          onClick={() => {
+            navigate && navigate("/todos/new");
+          }}
+        >
+          {t("new")}
+        </Button>
+      </th>
+    </tr>
+  </thead>
+);
+
+interface ITableBody {
+  todos: Todo[];
+  onDelete: onDeleteFN;
+  onChecked: onCheckedFN;
+}
+
+const TableBody: React.FC<ITableBody> = ({ todos, onDelete, onChecked }) => (
+  <tbody>
+    {todos.map(todo => (
+      <TodoListLine
+        key={todo.id}
+        todo={todo}
+        onDelete={onDelete}
+        onChecked={onChecked}
+      />
+    ))}
+  </tbody>
+);
+
+export interface TodosProps {
+  todos: Todo[];
+  onDelete: onDeleteFN;
+  onChecked: onCheckedFN;
+}
+const TodoList: React.FC<RouteComponentProps & TodosProps> = ({
   todos,
   navigate,
+  onDelete,
+  onChecked,
 }) => {
   const { t } = useTranslation();
   return (
     <Table>
-      <thead>
-        <tr>
-          <th colSpan={3}>{t("new_todo")}</th>
-          <th>
-            <Button
-              color="primary"
-              size="sm"
-              className="floating-right"
-              onClick={() => {
-                navigate && navigate("/todos/new");
-              }}
-            >
-              {t("new")}
-            </Button>
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        {todos && todos.map(todo => <TodoListLine key={todo.id} todo={todo} />)}
-      </tbody>
+      <TableHead t={t} navigate={navigate || console.log} />
+      <TableBody todos={todos} onDelete={onDelete} onChecked={onChecked} />
     </Table>
   );
 };

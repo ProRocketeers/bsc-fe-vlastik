@@ -17,3 +17,5 @@ export const putTodo = (todo: Todo) =>
 
 export const postTodo = (todo: ITodoForm) =>
   api.post<Todo>(`/todos`, todo).then(({ data }) => data);
+
+export const deleteTodo = (id: string) => api.delete(`/todos/${id}`);
