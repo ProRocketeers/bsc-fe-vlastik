@@ -7,8 +7,8 @@ class ToDos extends React.Component {
   render() {
     return (
       <Router>
-        <Home path="/" />
-        <TodoApp path="todos/*" />
+        <TodoApp path="/*" />
+        <TodoApp path="/todos/*" />
       </Router>
     );
   }

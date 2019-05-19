@@ -4,21 +4,18 @@ import AppRouter from "./components/BaseRouter";
 import { Link } from "@reach/router";
 import Header from "./components/Header";
 import "./i18n";
-import i18next from "i18next";
+import { useTranslation } from "react-i18next";
 
 const App: React.FC = () => {
   const [lang, setLang] = useState("en");
+  const {t, i18n} = useTranslation()
   return (
     <React.Fragment>
       <Header
-        onLanguageChange={(language: string) =>
-          i18next.changeLanguage(language, () => setLang(lang))
-        }
+        onLanguageChange={(lang: string) =>{
+          i18n.changeLanguage(lang)
+        }}
       />
-      <nav>
-        <Link to="/">Home</Link>
-        <Link to="/todos">Todos</Link>
-      </nav>
       <AppRouter />
     </React.Fragment>
   );

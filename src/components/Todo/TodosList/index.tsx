@@ -49,9 +49,7 @@ const TodoList: React.FC<RouteComponentProps<TodosProps>> = ({
     <Table>
       <thead>
         <tr>
-          <th>{t("new_todo")}</th>
-          <th />
-          <th />
+          <th colSpan={3}>{t("new_todo")}</th>
           <th>
             <Button
               color="primary"

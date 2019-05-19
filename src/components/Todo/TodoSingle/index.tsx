@@ -1,8 +1,10 @@
 import * as React from "react";
-import { RouteComponentProps } from "@reach/router";
+import { RouteComponentProps, Link } from "@reach/router";
 import { Todo } from "../TodosList";
 import { getTodosById } from "../../../api/todos";
 import TodoForm, { ITodoForm } from "../TodoForm";
+import { useTranslation } from "react-i18next";
+import { Button, Col, Row } from "reactstrap";
 
 interface TodoSingleProps {
   todos: Todo[];
@@ -21,13 +23,30 @@ interface DisplayTodoProps {
   onEdit: () => void;
 }
 
-const DisplayTodo: React.FC<DisplayTodoProps> = ({ todo, onEdit }) => (
-  <div>
-    <h1>{todo.title}</h1>
-    <h1>{todo.completed ? "Completed" : "NotCompleted"}</h1>
-    <button onClick={onEdit}>Edit</button>
-  </div>
-);
+const DisplayTodo: React.FC<DisplayTodoProps & RouteComponentProps> = ({
+  todo,
+  onEdit,
+  navigate,
+}) => {
+  const { t } = useTranslation();
+  return (
+    <div>
+      <h1>{todo.title}</h1>
+      <h1>{todo.completed ? t('todo_completed') : t('todo_not_completed')}</h1>
+
+      <Row>
+        <Col>
+          <Button onClick={onEdit}>{t("edit_todo")}</Button>
+        </Col>
+        <Col>
+          <Link to="/">
+            <Button>{t("back")}</Button>
+          </Link>
+        </Col>
+      </Row>
+    </div>
+  );
+};
 
 class Index extends React.Component<
   TodoSingleProps & RouteComponentProps<{ todoId: string }>,
