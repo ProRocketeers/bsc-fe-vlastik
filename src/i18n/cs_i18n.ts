@@ -6,4 +6,6 @@ export default {
   delete: "Smazat",
   new_todo: "Nová poznámka",
   new: "Nový",
+  title: "Název úkolu",
+  todo_state: "Stav úkolu",
 };

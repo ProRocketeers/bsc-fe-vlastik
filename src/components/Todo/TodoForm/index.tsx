@@ -12,7 +12,6 @@ import {
   Col,
   Row,
 } from "reactstrap";
-const { t } = useTranslation();
 
 interface TodoFormProps {
   todo?: Todo;
@@ -33,13 +32,14 @@ const initialValues: ITodoForm = {
   userId: 1,
 };
 
-const TodoForm: React.FC<TodoFormProps> = ({ todo, onSubmit, onCancel }) => (
-  <Formik
-    initialValues={todo || initialValues}
-    onSubmit={onSubmit}
-    render={props => (
-      <Form>
-        <ReactStrapFrom>
+const TodoForm: React.FC<TodoFormProps> = ({ todo, onSubmit, onCancel }) => {
+  const { t } = useTranslation();
+  return (
+    <Formik
+      initialValues={todo || initialValues}
+      onSubmit={onSubmit}
+      render={props => (
+        <Form>
           <FormGroup row>
             <Label>{t("title")}</Label>
             <Input tag={Field} id="id" name="title" type="text" />
@@ -56,8 +56,7 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, onSubmit, onCancel }) => (
               {t("todo_state")}
             </Label>
           </FormGroup>
-          <br />
-          <Row>
+          <Row className="float-right">
             <Col>
               <Button
                 type="submit"
@@ -75,10 +74,10 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, onSubmit, onCancel }) => (
               )}
             </Col>
           </Row>
-        </ReactStrapFrom>
-      </Form>
-    )}
-  />
-);
+        </Form>
+      )}
+    />
+  );
+};
 
 export default TodoForm;

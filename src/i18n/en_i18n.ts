@@ -6,4 +6,6 @@ export default {
   delete: "Delete",
   new_todo: "New todo",
   new: "New",
+  title: "Todo title",
+  todo_state: "State of todo",
 };
