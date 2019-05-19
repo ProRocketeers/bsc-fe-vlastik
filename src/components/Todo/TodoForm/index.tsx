@@ -2,16 +2,7 @@ import * as React from "react";
 import { Todo } from "../TodosList";
 import { Formik, Field, Form } from "formik";
 import { useTranslation } from "react-i18next";
-import {
-  Input,
-  InputGroup,
-  Label,
-  FormGroup,
-  Button,
-  Form as ReactStrapFrom,
-  Col,
-  Row,
-} from "reactstrap";
+import { Input, Label, FormGroup, Button, Col, Row } from "reactstrap";
 
 interface TodoFormProps {
   todo?: Todo;
