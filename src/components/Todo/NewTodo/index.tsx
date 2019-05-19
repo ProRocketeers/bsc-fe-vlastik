@@ -2,6 +2,7 @@ import * as React from "react";
 import { RouteComponentProps } from "@reach/router";
 import TodoForm, { ITodoForm } from "../TodoForm";
 import { Todo } from "../TodosList";
+import Loading from "../../Loading";
 
 interface INewTodo {
   onSubmit: (todo: ITodoForm) => Promise<Todo>;
@@ -35,7 +36,7 @@ class NewTodo extends React.Component<
 
   render() {
     return this.state.isLoading ? (
-      <div>IsLoading</div>
+      <Loading />
     ) : (
       <TodoForm onSubmit={this.onSubmit} onCancel={this.onCancel} />
     );

@@ -5,6 +5,7 @@ import { getTodosById } from "../../../api/todos";
 import TodoForm, { ITodoForm } from "../TodoForm";
 import { useTranslation } from "react-i18next";
 import { Button, Col, Row } from "reactstrap";
+import Loading from "../../Loading";
 
 interface TodoSingleProps {
   todos: Todo[];
@@ -24,12 +25,14 @@ const DisplayTodo: React.FC<DisplayTodoProps & RouteComponentProps> = ({
   const { t } = useTranslation();
   return (
     <div>
-      <h1>{todo.title}</h1>
-      <h1>{todo.completed ? t("todo_completed") : t("todo_not_completed")}</h1>
+      <h3>{todo.title}</h3>
+      <h3>{todo.completed ? t("todo_completed") : t("todo_not_completed")}</h3>
 
       <Row>
         <Col>
-          <Button onClick={onEdit}>{t("edit_todo")}</Button>
+          <Button color="warning" onClick={onEdit}>
+            {t("edit_todo")}
+          </Button>
         </Col>
         <Col>
           <Link to="/">
@@ -112,7 +115,7 @@ class Index extends React.Component<
   render() {
     const { todo, isEditing, isLoading, error } = this.state;
     if (isLoading) {
-      return <div>loading</div>;
+      return <Loading />;
     }
     if (error) {
       return <div>Error: {error.message}</div>;
