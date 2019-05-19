@@ -108,6 +108,7 @@ export default class TodoApp extends React.Component<
             path=":todoId/edit"
             todos={this.state.todos}
             onEdit={this.onSubmitTodoForm}
+            defaultEditState={true}
           />
           <NewTodo path="/new" onSubmit={this.onSubmitNewForm} />
           <TodosList

@@ -11,13 +11,6 @@ interface TodoSingleProps {
   onEdit: (todo: ITodoForm) => Promise<Todo>;
 }
 
-interface TodoSingleState {
-  todo?: Todo;
-  isEditing: boolean;
-  isLoading: boolean;
-  error?: Error;
-}
-
 interface DisplayTodoProps {
   todo: Todo;
   onEdit: () => void;
@@ -32,7 +25,7 @@ const DisplayTodo: React.FC<DisplayTodoProps & RouteComponentProps> = ({
   return (
     <div>
       <h1>{todo.title}</h1>
-      <h1>{todo.completed ? t('todo_completed') : t('todo_not_completed')}</h1>
+      <h1>{todo.completed ? t("todo_completed") : t("todo_not_completed")}</h1>
 
       <Row>
         <Col>
@@ -48,21 +41,31 @@ const DisplayTodo: React.FC<DisplayTodoProps & RouteComponentProps> = ({
   );
 };
 
+interface TodoSingleState {
+  todo?: Todo;
+  isEditing: boolean;
+  isLoading: boolean;
+  error?: Error;
+}
+
+interface TodoSingleProps {
+  defaultEditState?: boolean;
+}
+
 class Index extends React.Component<
   TodoSingleProps & RouteComponentProps<{ todoId: string }>,
   TodoSingleState
 > {
-  state: TodoSingleState = {
-    isEditing: false,
-    isLoading: false,
-    error: undefined,
-  };
-
   constructor(props: TodoSingleProps) {
     super(props);
     this.handleEdit = this.handleEdit.bind(this);
     this.handleCancel = this.handleCancel.bind(this);
     this.submitForm = this.submitForm.bind(this);
+    this.state = {
+      isEditing: props.defaultEditState ? true : false,
+      isLoading: false,
+      error: undefined,
+    };
   }
 
   componentDidMount() {

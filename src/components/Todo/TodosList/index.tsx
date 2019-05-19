@@ -43,6 +43,13 @@ const TodoListLine: React.FC<ITodoListLine> = ({
         <Link to={todo.id.toString()}>{todo.title}</Link>
       </td>
       <td>
+        <Link to={`/${todo.id}/edit`}>
+          <Button className="floating-right" size="sm" color="warning">
+            {t("edit_todo")}
+          </Button>
+        </Link>
+      </td>
+      <td>
         <Button
           className="floating-right"
           size="sm"
@@ -64,7 +71,7 @@ interface TableHead {
 const TableHead: React.FC<TableHead> = ({ t, navigate }) => (
   <thead>
     <tr>
-      <th colSpan={3}>{t("new_todo")}</th>
+      <th colSpan={4}>{t("new_todo")}</th>
       <th>
         <Button
           color="primary"

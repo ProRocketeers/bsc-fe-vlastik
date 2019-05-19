@@ -13,7 +13,7 @@ i18n
         translation: cs,
       },
     },
-    lng: "en",
+    lng: "cs",
     fallbackLng: ["en", "cs"],
   });
 
