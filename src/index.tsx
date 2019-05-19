@@ -9,6 +9,8 @@ import { initReactI18next } from "react-i18next";
 import cs from "./i18n/cs_i18n";
 import en from "./i18n/en_i18n";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+
 i18n
   .use(initReactI18next) // passes i18n down to react-i18next
   .init({

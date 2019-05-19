@@ -2,6 +2,17 @@ import * as React from "react";
 import { Todo } from "../TodosList";
 import { Formik, Field, Form } from "formik";
 import { useTranslation } from "react-i18next";
+import {
+  Input,
+  InputGroup,
+  Label,
+  FormGroup,
+  Button,
+  Form as ReactStrapFrom,
+  Col,
+  Row,
+} from "reactstrap";
+const { t } = useTranslation();
 
 interface TodoFormProps {
   todo?: Todo;
@@ -22,29 +33,49 @@ const initialValues: ITodoForm = {
   userId: 1,
 };
 
-const { t } = useTranslation();
-
 const TodoForm: React.FC<TodoFormProps> = ({ todo, onSubmit, onCancel }) => (
   <Formik
     initialValues={todo || initialValues}
     onSubmit={onSubmit}
     render={props => (
       <Form>
-        <Field id="title" name="title" placeholder="..." type="text" />
-        <Field
-          id="completed"
-          name="completed"
-          type="checkbox"
-          checked={props.values.completed}
-        />
-        <button type="submit" style={{ display: "block" }}>
-          {t("save")}
-        </button>
-        {onCancel && (
-          <button type="button" onClick={onCancel}>
-            {t("cancel")}
-          </button>
-        )}
+        <ReactStrapFrom>
+          <FormGroup row>
+            <Label>{t("title")}</Label>
+            <Input tag={Field} id="id" name="title" type="text" />
+          </FormGroup>
+          <FormGroup check row>
+            <Label check>
+              <Input
+                tag={Field}
+                id="completed"
+                name="completed"
+                type="checkbox"
+                checked={props.values.completed}
+              />
+              {t("todo_state")}
+            </Label>
+          </FormGroup>
+          <br />
+          <Row>
+            <Col>
+              <Button
+                type="submit"
+                style={{ display: "block" }}
+                color="success"
+              >
+                {t("save")}
+              </Button>
+            </Col>
+            <Col className="text-right">
+              {onCancel && (
+                <Button type="button" onClick={onCancel}>
+                  {t("cancel")}
+                </Button>
+              )}
+            </Col>
+          </Row>
+        </ReactStrapFrom>
       </Form>
     )}
   />

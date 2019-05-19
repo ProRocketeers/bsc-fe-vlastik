@@ -6,6 +6,7 @@ import TodosList, { Todo } from "./TodosList";
 import { getAllTodos, putTodo, postTodo } from "../../api/todos";
 import NewTodo from "./NewTodo";
 import { ITodoForm } from "./TodoForm";
+import { Container } from "reactstrap";
 
 interface TodosState {
   todos: Todo[];
@@ -79,7 +80,7 @@ export default class TodoApp extends React.Component<
 
   render() {
     return (
-      <div>
+      <Container>
         <Router>
           <TodoSingle
             path=":todoId"
@@ -89,7 +90,7 @@ export default class TodoApp extends React.Component<
           <NewTodo path="/new" onSubmit={this.onSubmitNewForm} />
           <TodosList path="/" todos={this.state.todos} />
         </Router>
-      </div>
+      </Container>
     );
   }
 }
