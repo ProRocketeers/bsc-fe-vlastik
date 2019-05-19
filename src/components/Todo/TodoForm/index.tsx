@@ -1,6 +1,7 @@
 import * as React from "react";
 import { Todo } from "../TodosList";
 import { Formik, Field, Form } from "formik";
+import { useTranslation } from "react-i18next";
 
 interface TodoFormProps {
   todo?: Todo;
@@ -21,6 +22,8 @@ const initialValues: ITodoForm = {
   userId: 1,
 };
 
+const { t } = useTranslation();
+
 const TodoForm: React.FC<TodoFormProps> = ({ todo, onSubmit, onCancel }) => (
   <Formik
     initialValues={todo || initialValues}
@@ -35,11 +38,11 @@ const TodoForm: React.FC<TodoFormProps> = ({ todo, onSubmit, onCancel }) => (
           checked={props.values.completed}
         />
         <button type="submit" style={{ display: "block" }}>
-          Submit
+          {t("save")}
         </button>
         {onCancel && (
           <button type="button" onClick={onCancel}>
-            Cancel
+            {t("cancel")}
           </button>
         )}
       </Form>
