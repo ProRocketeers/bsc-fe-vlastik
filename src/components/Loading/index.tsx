@@ -1,8 +1,6 @@
 import * as React from "react";
 import { Spinner } from "reactstrap";
 
-const Loading: React.FC = () => (
-  <Spinner style={{ width: "3rem", height: "3rem" }} />
-);
+const Loading: React.FC = () => <Spinner size="sm" />;
 
 export default Loading;

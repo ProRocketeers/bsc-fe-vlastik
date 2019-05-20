@@ -1,11 +1,11 @@
 import * as React from "react";
 import { Link, RouteComponentProps, NavigateFn } from "@reach/router";
-import { Table, Button, Input } from "reactstrap";
+import { Table, Button } from "reactstrap";
 
 import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 
-type onDeleteFN = (todo: Todo) => void;
+type onDeleteFN = (todo: Todo) => Promise<void>;
 type onCheckedFN = (todo: Todo) => Promise<Todo | undefined>;
 
 export interface Todo {
@@ -29,16 +29,6 @@ const TodoListLine: React.FC<ITodoListLine> = ({
   const { t } = useTranslation();
   return (
     <tr>
-      <td>{todo.id}</td>
-      <td>
-        <Input
-          type="checkbox"
-          defaultChecked={todo.completed}
-          onChange={event => {
-            onChecked({ ...todo, completed: event.target.checked });
-          }}
-        />
-      </td>
       <td>
         <Link to={todo.id.toString()}>{todo.title}</Link>
       </td>
@@ -54,7 +44,9 @@ const TodoListLine: React.FC<ITodoListLine> = ({
           className="floating-right"
           size="sm"
           color="danger"
-          onClick={() => onDelete(todo)}
+          onClick={() => {
+            onDelete(todo);
+          }}
         >
           {t("delete")}
         </Button>
@@ -71,7 +63,7 @@ interface TableHead {
 const TableHead: React.FC<TableHead> = ({ t, navigate }) => (
   <thead>
     <tr>
-      <th colSpan={4}>{t("new_todo")}</th>
+      <th colSpan={2}>{t("new_todo")}</th>
       <th>
         <Button
           color="primary"
@@ -120,7 +112,7 @@ const TodoList: React.FC<RouteComponentProps & TodosProps> = ({
 }) => {
   const { t } = useTranslation();
   return (
-    <Table>
+    <Table responsive={true}>
       <TableHead t={t} navigate={navigate || console.log} />
       <TableBody todos={todos} onDelete={onDelete} onChecked={onChecked} />
     </Table>

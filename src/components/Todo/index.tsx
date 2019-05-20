@@ -6,7 +6,6 @@ import TodosList, { Todo } from "./TodosList";
 import { getAllTodos, putTodo, postTodo, deleteTodo } from "../../api/todos";
 import NewTodo from "./NewTodo";
 import { ITodoForm } from "./TodoForm";
-import { Container } from "reactstrap";
 
 interface TodosState {
   todos: Todo[];
@@ -83,7 +82,7 @@ export default class TodoApp extends React.Component<
   }
 
   onDeleteTodo(todo: Todo) {
-    deleteTodo(todo.id.toString())
+    return deleteTodo(todo.id.toString())
       .then(() => {
         const withoutRemovedTodo = R.reject(R.propEq("id", todo.id))(
           this.state.todos
@@ -97,28 +96,26 @@ export default class TodoApp extends React.Component<
 
   render() {
     return (
-      <Container>
-        <Router>
-          <TodoSingle
-            path=":todoId"
-            todos={this.state.todos}
-            onEdit={this.onSubmitTodoForm}
-          />
-          <TodoSingle
-            path=":todoId/edit"
-            todos={this.state.todos}
-            onEdit={this.onSubmitTodoForm}
-            defaultEditState={true}
-          />
-          <NewTodo path="/new" onSubmit={this.onSubmitNewForm} />
-          <TodosList
-            path="/"
-            todos={this.state.todos}
-            onDelete={this.onDeleteTodo}
-            onChecked={this.onSubmitTodoForm}
-          />
-        </Router>
-      </Container>
+      <Router>
+        <TodoSingle
+          path=":todoId"
+          todos={this.state.todos}
+          onEdit={this.onSubmitTodoForm}
+        />
+        <TodoSingle
+          path=":todoId/edit"
+          todos={this.state.todos}
+          onEdit={this.onSubmitTodoForm}
+          defaultEditState={true}
+        />
+        <NewTodo path="/new" onSubmit={this.onSubmitNewForm} />
+        <TodosList
+          path="/"
+          todos={this.state.todos}
+          onDelete={this.onDeleteTodo}
+          onChecked={this.onSubmitTodoForm}
+        />
+      </Router>
     );
   }
 }

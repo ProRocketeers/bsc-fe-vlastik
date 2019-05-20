@@ -9,26 +9,24 @@ interface IHeader {
 const Header: React.FC<IHeader> = ({ onLanguageChange }) => {
   const { t, i18n } = useTranslation();
   return (
-    <div>
-      <Navbar color="light" light expand="md">
-        <Col>
-          <NavbarBrand href="/">{t("brand")}</NavbarBrand>
-        </Col>
-        <Col xs="3">
-          <Input
-            type="select"
-            onChange={event => {
-              onLanguageChange(event.target.value);
-            }}
-            right="true"
-          >
-            {i18n.languages.map(lang => (
-              <option key={lang}>{lang}</option>
-            ))}
-          </Input>
-        </Col>
-      </Navbar>
-    </div>
+    <Navbar color="light" light>
+      <Col>
+        <NavbarBrand href="/">{t("brand")}</NavbarBrand>
+      </Col>
+      <Col lg={2}>
+        <Input
+          type="select"
+          onChange={event => {
+            onLanguageChange(event.target.value);
+          }}
+          right="true"
+        >
+          {i18n.languages.map(lang => (
+            <option key={lang}>{lang}</option>
+          ))}
+        </Input>
+      </Col>
+    </Navbar>
   );
 };
 
