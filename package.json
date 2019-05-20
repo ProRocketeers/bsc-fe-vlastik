@@ -28,7 +28,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettify:all": "prettier --write ./src/**/*.{ts,tsx,js,jsx,json,md}"
+    "prettify:all": "prettier --write ./src/**/*.{ts,tsx,js,jsx,json,md}",
+    "test:e2e": "cypress run"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -49,6 +50,7 @@
     "@types/axios": "^0.14.0",
     "@types/ramda": "^0.26.8",
     "@types/reactstrap": "^8.0.1",
+    "cypress": "^3.3.0",
     "prettier": "1.17.1"
   }
 }
